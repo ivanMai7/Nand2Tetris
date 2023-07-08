@@ -10,3 +10,47 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
+
+	@R0
+	D=M
+	@a1
+	M=D // a1 = R0
+
+	@R1
+	D=M
+	@a2
+	M=D // a2 = R1
+
+	@i
+	M=0 // i = 0
+	@res
+	M=0 // res = 0
+
+(LOOP)
+	@i
+	D=M
+	@a2
+	D=D-M
+	@STOP
+	D;JGE // if i >= a2 goto STOP
+
+	@res
+	D=M
+	@a1
+	D=D+M
+	@res
+	M=D // res = res + a1
+	@i
+	M=M+1 // i = i + 1
+	@LOOP
+	0;JMP
+
+(STOP)
+	@res
+	D=M
+	@R2
+	M=D // RAM[2] = res
+
+(END)
+	@END
+	0;JMP

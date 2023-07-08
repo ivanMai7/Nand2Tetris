@@ -40,4 +40,46 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+	
+	Mux16(a=instruction,b=aluOut,sel=instruction[15],out=out1);
+	Not(in=instruction[15],out=writeA);
+	Or(a=writeA,b=instruction[5],out=loadRegisterA);
+	ARegister(in=out1,load=loadRegisterA,out=aRegisterOut,out[0..14]=addressM);
+	And(a=instruction[4],b=instruction[15],out=loadRegisterD);
+	DRegister(in=aluOut,load=loadRegisterD,out=dRegisterOut);
+	Mux16(a=aRegisterOut,b=inM,sel=instruction[12],out=temp);
+	ALU(x=dRegisterOut,y=temp,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],out=aluOut,out=outM,zr=zr,ng=ng);
+	
+	// jump0 is 0
+	// jump1
+	Or(a=zr,b=ng,out=or1);
+	Not(in=or1,out=jump1);
+	// jump2 is zr
+	// jump3
+	Not(in=ng,out=jump3);
+	// jump4 is ng
+	// jump5
+	Not(in=zr,out=jump5);
+	// jump6
+	Or(a=zr,b=ng,out=jump6);
+	// jump7 is 1
+	
+	Extension16(in=jump1,out=j1);
+	Extension16(in=jump3,out=j3);
+	Extension16(in=jump5,out=j5);
+	Extension16(in=jump6,out=j6);
+	Extension16(in=zr,out=zr1);
+	Extension16(in=ng,out=ng1);
+	Mux8Way16(a=false,b=j1,c=zr1,d=j3,e=ng1,f=j5,g=j6,h=true,sel=instruction[0..2],out=loadPC);
+	
+	DeEx(in=loadPC,out=loadPC1);
+	
+	And(a=loadPC1,b=instruction[15],out=loadPC2);
+	
+	PC(in=aRegisterOut,reset=reset,load=loadPC2,inc=true,out[0..14]=pc);
+	
+	Not(in=instruction[3],out=notD3);
+	Not(in=notD3,out=d3);
+	And(a=d3,b=instruction[15],out=writeM);
+	
 }
