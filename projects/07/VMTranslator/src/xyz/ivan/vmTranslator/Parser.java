@@ -9,6 +9,11 @@ public class Parser {
     public CommandType type;
     public SegmentType segmentType;
     public int segmentPos;
+    public String labelName;
+    public String functionName;
+    public int argsN;
+    public int localsN;
+    public String fileName;
     public void parse(String command){
         String type = command.split(" ")[0];
         switch (type){
@@ -23,6 +28,12 @@ public class Parser {
             case "and": this.type = CommandType.AND; break;
             case "or": this.type = CommandType.OR; break;
             case "not": this.type = CommandType.NOT; break;
+            case "label": this.type = CommandType.LABEL; break;
+            case "goto": this.type = CommandType.GOTO; break;
+            case "if-goto": this.type = CommandType.IF_GOTO; break;
+            case "call": this.type = CommandType.CALL; break;
+            case "function": this.type = CommandType.FUNCTION; break;
+            case "return": this.type = CommandType.RETURN; break;
         }
         if( this.type.value == 1 ){ // memory access commands
             String segmentType = command.split(" ")[1];
@@ -36,6 +47,17 @@ public class Parser {
                 case "that": this.segmentType = SegmentType.THAT; break;
                 case "pointer": this.segmentType = SegmentType.POINTER; break;
                 case "temp": this.segmentType = SegmentType.TEMP; break;
+            }
+        }else if( this.type.value == 3 ){ // control commands
+            String label = command.split(" ")[1];
+            this.labelName = label;
+        } else if( this.type.value == 4 ){ // function commands
+            if( this.type == CommandType.FUNCTION ){
+                this.functionName = command.split(" ")[1];
+                this.localsN = Integer.parseInt(command.split(" ")[2]);
+            }else if( this.type == CommandType.CALL ){
+                this.functionName = command.split(" ")[1];
+                this.argsN = Integer.parseInt(command.split(" ")[2]);
             }
         }
     }

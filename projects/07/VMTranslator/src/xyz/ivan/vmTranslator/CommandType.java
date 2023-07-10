@@ -18,7 +18,13 @@ public enum CommandType {
     LT(2),
     AND(2),
     OR(2),
-    NOT(2);
+    NOT(2),
+    LABEL(3),
+    GOTO(3),
+    IF_GOTO(3),
+    CALL(4),
+    FUNCTION(4),
+    RETURN(4);
 
     public int value;
 
