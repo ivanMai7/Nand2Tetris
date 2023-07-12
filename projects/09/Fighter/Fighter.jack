@@ -1,0 +1,202 @@
+// The Fighter class
+class Fighter{
+
+	field int x,y; // the locations of the fighter's top-left corner
+	
+	/** Constructs a new fighter with a given location */
+	constructor Fighter new(int Ax,int Ay){
+		var int location;
+		let x = Ax;
+		let y = Ay;
+		let location = getLocation(x,y);
+		do Fighter.draw(location);
+		return this;
+	}
+	
+	/** Disposes this fighter. */
+	method void dispose(){
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+	method int getLocation(int Ax,int Ay){
+		var int location;
+		let Ax = Ax / 16;
+		let location = Ax + (Ay * 32);
+		return location;
+	}
+	
+	/** Draws the fighter on the screen. */
+	function void draw(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		
+		do Memory.poke(memAddress+0, 2016);
+		do Memory.poke(memAddress+32, 1440);
+		do Memory.poke(memAddress+64, 2016);
+		do Memory.poke(memAddress+96, 384);
+		do Memory.poke(memAddress+128, 384);
+		do Memory.poke(memAddress+160, -12304);
+		do Memory.poke(memAddress+192, 19344);
+		do Memory.poke(memAddress+224, -16);
+		do Memory.poke(memAddress+256, 16768);
+		do Memory.poke(memAddress+288, -15424);
+		do Memory.poke(memAddress+320, 1632);
+		do Memory.poke(memAddress+352, 3120);
+		do Memory.poke(memAddress+384, 6168);
+		do Memory.poke(memAddress+416, 12300);
+		do Memory.poke(memAddress+448, 24582);
+		do Memory.poke(memAddress+480, -16381);
+		
+		return;
+	}
+	
+	/** Erases the fighter from the screen. */
+   method void erase(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		
+		do Memory.poke(memAddress+0, 0);
+		do Memory.poke(memAddress+32, 0);
+		do Memory.poke(memAddress+64, 0);
+		do Memory.poke(memAddress+96, 0);
+		do Memory.poke(memAddress+128, 0);
+		do Memory.poke(memAddress+160, 0);
+		do Memory.poke(memAddress+192, 0);
+		do Memory.poke(memAddress+224, 0);
+		do Memory.poke(memAddress+256, 0);
+		do Memory.poke(memAddress+288, 0);
+		do Memory.poke(memAddress+320, 0);
+		do Memory.poke(memAddress+352, 0);
+		do Memory.poke(memAddress+384, 0);
+		do Memory.poke(memAddress+416, 0);
+		do Memory.poke(memAddress+448, 0);
+		do Memory.poke(memAddress+480, 0);
+		
+		return;
+   }
+   
+   /** Turn to the left */
+   function void leftDraw(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, -16381);
+		do Memory.poke(memAddress+32, 24582);
+		do Memory.poke(memAddress+64, 12300);
+		do Memory.poke(memAddress+96, 6168);
+		do Memory.poke(memAddress+128, 3120);
+		do Memory.poke(memAddress+160, 1632);
+		do Memory.poke(memAddress+192, 963);
+		do Memory.poke(memAddress+224, 386);
+		do Memory.poke(memAddress+256, 4095);
+		do Memory.poke(memAddress+288, 2514);
+		do Memory.poke(memAddress+320, 4083);
+		do Memory.poke(memAddress+352, 384);
+		do Memory.poke(memAddress+384, 384);
+		do Memory.poke(memAddress+416, 2016);
+		do Memory.poke(memAddress+448, 1440);
+		do Memory.poke(memAddress+480, 2016);
+		return;
+	}
+	
+	function void upDraw(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, -32096);
+		do Memory.poke(memAddress+32, -15392);
+		do Memory.poke(memAddress+64, 24704);
+		do Memory.poke(memAddress+96, 12416);
+		do Memory.poke(memAddress+128, 6368);
+		do Memory.poke(memAddress+160, 3239);
+		do Memory.poke(memAddress+192, 1765);
+		do Memory.poke(memAddress+224, 1023);
+		do Memory.poke(memAddress+256, 1023);
+		do Memory.poke(memAddress+288, 1701);
+		do Memory.poke(memAddress+320, 3239);
+		do Memory.poke(memAddress+352, 6368);
+		do Memory.poke(memAddress+384, 12288);
+		do Memory.poke(memAddress+416, 24576);
+		do Memory.poke(memAddress+448, -16384);
+		do Memory.poke(memAddress+480, -32767);
+		return;
+	}
+	
+	function void downDraw(int location) {
+		var int memAddress;
+		let memAddress = 16384+location;
+		do Memory.poke(memAddress+0, 1);
+		do Memory.poke(memAddress+32, 3);
+		do Memory.poke(memAddress+64, 6);
+		do Memory.poke(memAddress+96, 12);
+		do Memory.poke(memAddress+128, 1816);
+		do Memory.poke(memAddress+160, -6864);
+		do Memory.poke(memAddress+192, -23200);
+		do Memory.poke(memAddress+224, -64);
+		do Memory.poke(memAddress+256, -64);
+		do Memory.poke(memAddress+288, -22688);
+		do Memory.poke(memAddress+320, -6864);
+		do Memory.poke(memAddress+352, 1816);
+		do Memory.poke(memAddress+384, 268);
+		do Memory.poke(memAddress+416, 262);
+		do Memory.poke(memAddress+448, 1987);
+		do Memory.poke(memAddress+480, 1345);
+		return;
+	}
+	
+	
+   
+   
+   /** Moves the fighter up by 2 pixels. */
+   method void moveUp() {
+      var int location;
+      if (y > 1) {
+	    let location = getLocation(x,y);
+		do erase(location);
+		let y = y - 2;
+		let location = getLocation(x,y);
+		do Fighter.upDraw(location);
+      }
+      return;
+   }
+   
+   /** Moves the fighter down by 2 pixels. */
+   method void moveDown() {
+	  var int location;
+      if (y + 16 < 254) {
+	    let location = getLocation(x,y);
+		do erase(location);
+		let y = y + 2;
+		let location = getLocation(x,y);
+		do Fighter.downDraw(location);
+      }
+      return;
+   }
+   
+   
+   /** Moves the fighter left by 2 pixels. */
+   method void moveLeft() {
+      var int location;
+      if (x > 1) {
+	    let location = getLocation(x,y);
+		do erase(location);
+		let x = x - 2;
+		let location = getLocation(x,y);
+		do Fighter.leftDraw(location);
+      }
+      return;
+   }
+   
+   /** Moves the fighter right by 2 pixels. */
+   method void moveRight() {
+      var int location;
+      if (x < 495) { // x < 510
+	    let location = getLocation(x,y);
+		do erase(location);
+		let x = x + 2;
+		let location = getLocation(x,y);
+		do Fighter.draw(location);
+      }
+      return;
+   }
+
+}
